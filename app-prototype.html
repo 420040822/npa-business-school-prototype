@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>存量与不良资产商学院</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e40af;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --diamond: #60a5fa;
+      --diamond-light: #dbeafe;
+      --crown: #a78bfa;
+      --silver: #9ca3af;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #f5f5f5;
+      --white: #ffffff;
+      --text: #1f2937;
+      --text-secondary: #6b7280;
+      --text-light: #9ca3af;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ===== 状态栏 ===== */
+    .status-bar {
+      background: var(--white);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* ===== 页面容器 ===== */
+    .page {
+      padding-bottom: 70px;
+      min-height: calc(100vh - 30px);
+    }
+
+    .page.hidden {
+      display: none;
+    }
+
+    /* ===== 首页 ===== */
+    .home-header {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      padding: 20px 16px;
+      border-radius: 0 0 24px 24px;
+    }
+
+    .home-header h1 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .home-header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .search-bar {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 10px 16px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-bar input {
+      background: transparent;
+      border: none;
+      color: white;
+      flex: 1;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-bar input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ===== 模块入口 ===== */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 20px 16px;
+      background: var(--white);
+      margin: -12px 12px 12px;
+      border-radius: 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .module-item {
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .module-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 6px;
+    }
+
+    .module-item span {
+      font-size: 11px;
+    }
+
+    /* ===== 会员Banner ===== */
+    .member-banner {
+      margin: 12px;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .member-avatar {
+      width: 44px;
+      height: 44px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .member-text h4 {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .member-text p {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .member-btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ===== 区块标题 ===== */
+    .section-header {
+      padding: 16px 16px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+    }
+
+    .section-header a {
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    /* ===== 课程卡片 ===== */
+    .course-list {
+      padding: 0 16px;
+    }
+
+    .course-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .course-thumb {
+      width: 100px;
+      height: 70px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .course-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .course-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .course-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .course-tag {
+      background: rgba(59,130,246,0.1);
+      color: #3b82f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+
+    .course-price {
+      color: var(--danger);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* ===== 项目卡片 ===== */
+    .project-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 0 16px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .project-thumb {
+      height: 140px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .project-content {
+      padding: 12px;
+    }
+
+    .project-tag {
+      display: inline-block;
+      background: rgba(239,68,68,0.1);
+      color: var(--danger);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      margin-bottom: 6px;
+    }
+
+    .project-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .project-price {
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .project-apply {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 16px;
+      font-size: 12px;
+    }
+
+    /* ===== 底部导航 ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: var(--white);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 20px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 10px;
+      padding: 4px 12px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active .nav-icon {
+      background: rgba(26,86,219,0.1);
+    }
+
+    .nav-icon {
+      font-size: 22px;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    /* ===== 会员中心页 ===== */
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 12px;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .profile-level {
+      display: inline-block;
+      background: var(--gold);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    /* ===== 会员权益卡 ===== */
+    .member-card {
+      margin: 16px;
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .member-card-header {
+      background: linear-gradient(135deg, var(--gold), #f59e0b);
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .member-card-header h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .member-card-header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .member-card-body {
+      padding: 16px;
+    }
+
+    .member-benefit {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .member-benefit:last-child {
+      border-bottom: none;
+    }
+
+    .benefit-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(26,86,219,0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .benefit-text {
+      flex: 1;
+    }
+
+    .benefit-text h4 {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .benefit-text p {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .benefit-check {
+      color: var(--success);
+      font-size: 18px;
+    }
+
+    /* ===== 升级按钮 ===== */
+    .upgrade-section {
+      padding: 16px;
+    }
+
+    .upgrade-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), #f59e0b);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ===== 四级会员 ===== */
+    .vip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .vip-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+
+    .vip-card.featured {
+      border-color: var(--gold);
+      position: relative;
+    }
+
+    .vip-card.featured::before {
+      content: "推荐";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+    }
+
+    .vip-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .vip-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .vip-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--danger);
+      margin-bottom: 8px;
+    }
+
+    .vip-price span {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .vip-btn {
+      width: 100%;
+      padding: 8px;
+      border-radius: 16px;
+      border: none;
+      font-size: 12px;
+    }
+
+    .vip-btn-gold {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .vip-btn-diamond {
+      background: var(--diamond-light);
+      color: var(--diamond);
+    }
+
+    /* ===== AI工具页 ===== */
+    .ai-tool-card {
+      margin: 16px;
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .ai-tool-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .ai-tool-info {
+      flex: 1;
+    }
+
+    .ai-tool-info h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .ai-tool-info p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .ai-tool-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    /* ===== 对公转账 ===== */
+    .transfer-box {
+      margin: 16px;
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .transfer-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .transfer-account {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .transfer-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .transfer-row:last-child {
+      border-bottom: none;
+    }
+
+    .transfer-label {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .transfer-value {
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .transfer-note {
+      background: #fef3c7;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .transfer-note h4 {
+      color: #92400e;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .transfer-note p {
+      color: #78350f;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .transfer-submit {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ===== 课程播放页 ===== */
+    .video-container {
+      background: #000;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+    }
+
+    .video-info {
+      background: var(--white);
+      padding: 16px;
+    }
+
+    .video-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .video-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .video-tabs {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .video-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+    }
+
+    .video-tab.active {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .video-desc {
+      padding: 16px;
+      background: var(--white);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    /* ===== 项目详情页 ===== */
+    .project-header {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      padding: 24px 16px;
+    }
+
+    .project-header h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .project-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .project-detail {
+      background: var(--white);
+      padding: 16px;
+      margin: 12px;
+      border-radius: 12px;
+    }
+
+    .detail-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .detail-content {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .detail-row {
+      display: flex;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-label {
+      width: 80px;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .detail-value {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    /* ===== 菜单列表 ===== */
+    .menu-list {
+      background: var(--white);
+      margin: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-icon {
+      width: 32px;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+
+    .menu-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .menu-arrow {
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>📶 📡 🔋</span>
+  </div>
+
+  <!-- ===== 首页 ===== -->
+  <div class="page" id="page-home">
+    <div class="home-header">
+      <h1>存量与不良资产商学院</h1>
+      <p>专业 · 专注 · 赋能</p>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="搜索课程、项目...">
+      </div>
+    </div>
+
+    <!-- 模块入口 -->
+    <div class="module-grid">
+      <a href="#" class="module-item" onclick="showPage('page-courses')">
+        <div class="module-icon">📚</div>
+        <span>课程</span>
+      </a>
+      <a href="#" class="module-item" onclick="showPage('page-projects')">
+        <div class="module-icon">💼</div>
+        <span>项目</span>
+      </a>
+      <a href="#" class="module-item" onclick="showPage('page-ai')">
+        <div class="module-icon">🤖</div>
+        <span>AI工具</span>
+      </a>
+      <a href="#" class="module-item" onclick="showPage('page-profile')">
+        <div class="module-icon">💎</div>
+        <span>会员</span>
+      </a>
+    </div>
+
+    <!-- 会员Banner -->
+    <div class="member-banner" onclick="showPage('page-profile')">
+      <div class="member-info">
+        <div class="member-avatar">👤</div>
+        <div class="member-text">
+          <h4>黄金会员</h4>
+          <p>查看专属权益</p>
+        </div>
+      </div>
+      <button class="member-btn">升级钻石</button>
+    </div>
+
+    <!-- 热门课程 -->
+    <div class="section-header">
+      <h3>🔥 热门课程</h3>
+      <a href="#" onclick="showPage('page-courses')">查看更多 ></a>
+    </div>
+    <div class="course-list">
+      <div class="course-card" onclick="showPage('page-video')">
+        <div class="course-thumb">📺</div>
+        <div class="course-info">
+          <div class="course-title">不良资产处置实务与案例分析</div>
+          <div class="course-meta">
+            <span class="course-tag">热门</span>
+            <span>2.4万人学习</span>
+          </div>
+          <div class="course-price">¥299</div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-thumb" style="background: linear-gradient(135deg, #10b981, #059669);">🎓</div>
+        <div class="course-info">
+          <div class="course-title">存量资产并购重组操作指南</div>
+          <div class="course-meta">
+            <span class="course-tag">推荐</span>
+            <span>1.8万人学习</span>
+          </div>
+          <div class="course-price">¥399</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 精选项目 -->
+    <div class="section-header">
+      <h3>💼 精选项目</h3>
+      <a href="#" onclick="showPage('page-projects')">查看更多 ></a>
+    </div>
+    <div class="project-card" onclick="showPage('page-project-detail')">
+      <div class="project-thumb">🏢</div>
+      <div class="project-content">
+        <span class="project-tag">房产抵押</span>
+        <div class="project-title">上海某商业综合体债权处置项目</div>
+        <div class="project-footer">
+          <div class="project-price">¥800万</div>
+          <button class="project-apply">查看详情</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 课程页 ===== -->
+  <div class="page hidden" id="page-courses">
+    <div style="background: var(--white); padding: 16px;">
+      <h2 style="font-size: 18px;">课程中心</h2>
+    </div>
+    <div class="course-list">
+      <div class="course-card">
+        <div class="course-thumb">📺</div>
+        <div class="course-info">
+          <div class="course-title">不良资产处置实务与案例分析</div>
+          <div class="course-meta">
+            <span class="course-tag">热门</span>
+            <span>2.4万人学习</span>
+          </div>
+          <div class="course-price">¥299</div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-thumb" style="background: linear-gradient(135deg, #10b981, #059669);">🎓</div>
+        <div class="course-info">
+          <div class="course-title">存量资产并购重组操作指南</div>
+          <div class="course-meta">
+            <span class="course-tag">推荐</span>
+            <span>1.8万人学习</span>
+          </div>
+          <div class="course-price">¥399</div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-thumb" style="background: linear-gradient(135deg, #f59e0b, #d97706);">💰</div>
+        <div class="course-info">
+          <div class="course-title">不良资产投资逻辑与估值方法</div>
+          <div class="course-meta">
+            <span class="course-tag">精品</span>
+            <span>1.2万人学习</span>
+          </div>
+          <div class="course-price">¥499</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 课程播放页 ===== -->
+  <div class="page hidden" id="page-video">
+    <div class="video-container">▶️</div>
+    <div class="video-info">
+      <div class="video-title">不良资产处置实务与案例分析</div>
+      <div class="video-meta">
+        <span>👁️ 2.4万播放</span>
+        <span>⭐ 4.9分</span>
+        <span>📚 12课时</span>
+      </div>
+    </div>
+    <div class="video-tabs">
+      <div class="video-tab active">介绍</div>
+      <div class="video-tab">目录</div>
+      <div class="video-tab">评价</div>
+    </div>
+    <div class="video-desc">
+      本课程由行业资深专家授课，系统讲解不良资产处置的实操流程、法律要点和典型案例，帮助学员快速掌握行业核心技能...
+    </div>
+  </div>
+
+  <!-- ===== 项目页 ===== -->
+  <div class="page hidden" id="page-projects">
+    <div style="background: var(--white); padding: 16px;">
+      <h2 style="font-size: 18px;">项目中心</h2>
+    </div>
+    <div class="project-card" onclick="showPage('page-project-detail')">
+      <div class="project-thumb">🏢</div>
+      <div class="project-content">
+        <span class="project-tag">房产抵押</span>
+        <div class="project-title">上海某商业综合体债权处置项目</div>
+        <div class="project-footer">
+          <div class="project-price">¥800万</div>
+          <button class="project-apply">查看详情</button>
+        </div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-thumb" style="background: linear-gradient(135deg, #667eea, #764ba2);">🏭</div>
+      <div class="project-content">
+        <span class="project-tag">工业债权</span>
+        <div class="project-title">江苏某制造企业资产包转让</div>
+        <div class="project-footer">
+          <div class="project-price">¥450万</div>
+          <button class="project-apply">查看详情</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 项目详情页 ===== -->
+  <div class="page hidden" id="page-project-detail">
+    <div class="project-header">
+      <span class="project-tag" style="background: rgba(255,255,255,0.2); color: white;">房产抵押</span>
+      <h1>上海某商业综合体债权处置项目</h1>
+      <div class="project-stats">
+        <div class="stat-item">
+          <div class="stat-value">5000万</div>
+          <div class="stat-label">债权金额</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">800万</div>
+          <div class="stat-label">转让价格</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">16%</div>
+          <div class="stat-label">预期收益</div>
+        </div>
+      </div>
+    </div>
+    <div class="project-detail">
+      <div class="detail-title">项目简介</div>
+      <div class="detail-content">
+        该项目为上海某商业综合体抵押债权，抵押物为商业地产，位置优越，具有较高的处置价值和升值空间...
+      </div>
+    </div>
+    <div class="project-detail">
+      <div class="detail-title">项目信息</div>
+      <div class="detail-row">
+        <span class="detail-label">资产类型</span>
+        <span class="detail-value">商业地产抵押</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">所在地区</span>
+        <span class="detail-value">上海市浦东新区</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">抵押率</span>
+        <span class="detail-value">60%</span>
+      </div>
+    </div>
+    <div class="upgrade-section">
+      <button class="upgrade-btn" onclick="showPage('page-transfer')">💳 立即报名参与</button>
+    </div>
+  </div>
+
+  <!-- ===== AI工具页 ===== -->
+  <div class="page hidden" id="page-ai">
+    <div style="background: var(--white); padding: 16px;">
+      <h2 style="font-size: 18px;">AI智能工具</h2>
+    </div>
+    <div class="ai-tool-card">
+      <div class="ai-tool-icon">🎬</div>
+      <div class="ai-tool-info">
+        <h3>AI视频制作</h3>
+        <p>输入文案，一键生成专业视频</p>
+      </div>
+      <button class="ai-tool-btn">体验</button>
+    </div>
+    <div class="ai-tool-card">
+      <div class="ai-tool-icon" style="background: linear-gradient(135deg, #10b981, #059669);">🖼️</div>
+      <div class="ai-tool-info">
+        <h3>AI图文生成</h3>
+        <p>输入关键词，AI生成精美图片</p>
+      </div>
+      <button class="ai-tool-btn">体验</button>
+    </div>
+    <div class="ai-tool-card">
+      <div class="ai-tool-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📝</div>
+      <div class="ai-tool-info">
+        <h3>AI文案助手</h3>
+        <p>智能生成营销文案、宣传稿</p>
+      </div>
+      <button class="ai-tool-btn">体验</button>
+    </div>
+  </div>
+
+  <!-- ===== 会员中心页 ===== -->
+  <div class="page hidden" id="page-profile">
+    <div class="profile-header">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-name">张三</div>
+      <span class="profile-level">💎 黄金会员</span>
+    </div>
+
+    <div class="member-card">
+      <div class="member-card-header">
+        <h3>🎯 会员专属权益</h3>
+        <p>升级解锁更多权益</p>
+      </div>
+      <div class="member-card-body">
+        <div class="member-benefit">
+          <div class="benefit-icon">📚</div>
+          <div class="benefit-text">
+            <h4>全部课程免费学</h4>
+            <p>可观看平台所有付费课程</p>
+          </div>
+          <span class="benefit-check">✓</span>
+        </div>
+        <div class="member-benefit">
+          <div class="benefit-icon">🎥</div>
+          <div class="benefit-text">
+            <h4>线下研讨会名额</h4>
+            <p>每月优先参与线下活动</p>
+          </div>
+          <span class="benefit-check">✓</span>
+        </div>
+        <div class="member-benefit">
+          <div class="benefit-icon">👥</div>
+          <div class="benefit-text">
+            <h4>人脉对接服务</h4>
+            <p>专属客户经理对接资源</p>
+          </div>
+          <span style="color: var(--text-light);">×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="upgrade-section">
+      <button class="upgrade-btn">💎 升级钻石会员</button>
+    </div>
+
+    <div class="section-header">
+      <h3>会员等级</h3>
+    </div>
+    <div class="vip-grid">
+      <div class="vip-card">
+        <div class="vip-icon">🥈</div>
+        <div class="vip-name">白银会员</div>
+        <div class="vip-price">¥5,980<span>/年</span></div>
+        <button class="vip-btn vip-btn-gold">基础版</button>
+      </div>
+      <div class="vip-card featured">
+        <div class="vip-icon">🥇</div>
+        <div class="vip-name">黄金会员</div>
+        <div class="vip-price">¥26,800<span>/年</span></div>
+        <button class="vip-btn vip-btn-gold" style="background: var(--gold); color: white;">当前</button>
+      </div>
+      <div class="vip-card">
+        <div class="vip-icon">💎</div>
+        <div class="vip-name">钻石会员</div>
+        <div class="vip-price">¥59,800<span>/年</span></div>
+        <button class="vip-btn vip-btn-diamond">升级</button>
+      </div>
+      <div class="vip-card">
+        <div class="vip-icon">👑</div>
+        <div class="vip-name">联合创始人</div>
+        <div class="vip-price">¥198,000<span>/年</span></div>
+        <button class="vip-btn vip-btn-diamond">升级</button>
+      </div>
+    </div>
+
+    <div class="menu-list">
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📖</span>
+        <span class="menu-text">我的课程</span>
+        <span class="menu-arrow">›</span>
+      </a>
+      <a href="#" class="menu-item">
+        <span class="menu-icon">💼</span>
+        <span class="menu-text">我的项目</span>
+        <span class="menu-arrow">›</span>
+      </a>
+      <a href="#" class="menu-item" onclick="showPage('page-transfer')">
+        <span class="menu-icon">💳</span>
+        <span class="menu-text">对公转账</span>
+        <span class="menu-arrow">›</span>
+      </a>
+      <a href="#" class="menu-item">
+        <span class="menu-icon">⚙️</span>
+        <span class="menu-text">设置</span>
+        <span class="menu-arrow">›</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== 对公转账页 ===== -->
+  <div class="page hidden" id="page-transfer">
+    <div style="background: var(--white); padding: 16px; display: flex; align-items: center;">
+      <span style="font-size: 20px; margin-right: 12px;">←</span>
+      <h2 style="font-size: 18px;">对公转账</h2>
+    </div>
+    <div class="transfer-box">
+      <div class="transfer-title">🏦 请转账至公司账户</div>
+      <div class="transfer-account">
+        <div class="transfer-row">
+          <span class="transfer-label">公司名称</span>
+          <span class="transfer-value">存量与不良资产商学院有限公司</span>
+        </div>
+        <div class="transfer-row">
+          <span class="transfer-label">开户银行</span>
+          <span class="transfer-value">中国工商银行北京朝阳支行</span>
+        </div>
+        <div class="transfer-row">
+          <span class="transfer-label">银行账号</span>
+          <span class="transfer-value" style="font-family: monospace;">0200 1234 5678 9012 345</span>
+        </div>
+      </div>
+      <div class="transfer-note">
+        <h4>📝 付款说明</h4>
+        <p>1. 转账时请备注「会员类型+手机号」<br>
+           例如：黄金会员 13800138000<br><br>
+           2. 转账完成后联系客服确认<br>
+           📞 400-888-8888</p>
+      </div>
+      <button class="transfer-submit">✅ 我已转账，联系客服确认</button>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" onclick="showPage('page-home')">
+      <span class="nav-icon">🏠</span>
+      <span>首页</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showPage('page-courses')">
+      <span class="nav-icon">📚</span>
+      <span>课程</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showPage('page-projects')">
+      <span class="nav-icon">💼</span>
+      <span>项目</span>
+    </a>
+    <a href="#" class="nav-item" onclick="showPage('page-profile')">
+      <span class="nav-icon">👤</span>
+      <span>我的</span>
+    </a>
+  </nav>
+
+  <script>
+    function showPage(pageId) {
+      // 隐藏所有页面
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      // 显示目标页面
+      document.getElementById(pageId).classList.remove('hidden');
+      // 更新导航状态
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      // 找到对应的导航并激活
+      const navMap = {
+        'page-home': 0,
+        'page-courses': 1,
+        'page-projects': 2,
+        'page-profile': 3
+      };
+      if (navMap[pageId] !== undefined) {
+        document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
